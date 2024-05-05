@@ -80,7 +80,7 @@ authRouter.get("/", auth, async (req, res) => {
 //user profile edit & update
 authRouter.put("/api/update/:userId", async (req, res) => {
   const { userId }= req.params;
-  const {name , email, password } = req.body;
+  const {name , email, password, gender, phone } = req.body;
 
   try {
     const user = await User.findById(userId);
@@ -90,6 +90,8 @@ authRouter.put("/api/update/:userId", async (req, res) => {
     
     user.name = name;
     user.email = email;
+    user.gender = gender;
+    user.phone = phone;
 
     if (password) {
       // Hash the new password if provided
