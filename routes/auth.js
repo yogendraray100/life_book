@@ -77,4 +77,35 @@ authRouter.get("/", auth, async (req, res) => {
   res.json({ ...user._doc, token: req.token });
 });
 
+//user profile edit & update
+authRouter.put("/api/update/:userId", async (req, res) => {
+  const { userId }= req.params;
+  const {name , email, password } = req.body;
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ msg: "User not found" });
+    }
+    
+    user.name = name;
+    user.email = email;
+
+    if (password) {
+      // Hash the new password if provided
+      const hashedPassword = await bcryptjs.hash(password, 8);
+      user.password = hashedPassword;
+    }
+
+    const updatedUser = await user.save();
+    res.json(updatedUser);
+    
+    
+    
+  } catch (e) {
+    res.status(500).json({ error: error.message });
+  }
+})
+
+
 module.exports = authRouter;
