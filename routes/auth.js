@@ -3,7 +3,26 @@ const User = require("../models/user");
 const bcryptjs = require("bcryptjs");
 const authRouter = express.Router();
 const jwt = require("jsonwebtoken");
+const mongoose = require("mongoose");
 const auth = require("../middlewares/auth");
+const cloudinary = require('cloudinary').v2;
+const fs = require("fs");
+const multer  = require('multer')
+const { v4:uuidv4 } = require('uuid') ;
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './uploads')
+  },
+  filename: function (req, file, cb) {
+   const random = uuidv4()
+    cb(null, random+""+file.originalname)
+  }
+})
+
+const upload = multer({ storage: storage })
+require('../index')
+//const Image = mongoose.model('Image', {Image_Url: String});
+
 
 // SIGN UP
 authRouter.post("/api/signup", async (req, res) => {
@@ -78,9 +97,40 @@ authRouter.get("/", auth, async (req, res) => {
 });
 
 //user profile edit & update
-authRouter.put("/api/update/:userId", async (req, res) => {
+cloudinary.config({ 
+  cloud_name: 'dtgeckjmr', 
+  api_key: '836833412468214', 
+  api_secret: 'TOjtPhY-Drb6_AOVKPYfQzkE3Zw' 
+});
+
+authRouter.post("/upload",upload.single('myfile'),async (req,res) => {
+
+ const x = await cloudinary.uploader.upload(req.file.path);
+
+const newvar = new Image({Image_Url: x.secure_url})
+newvar.save().then(() => console.log("done"));
+
+ fs.unlink((req.file.path),
+ function(err){
+     if (err) console.log(err);
+     else {
+         console.log("\nDeleted file");
+
+         
+     }
+ });
+
+  res.json({
+  msg:'file uploaded',
+  your_url:{image_url: x.secure_url}
+  })
+})
+
+
+authRouter.put("/api/update/:userId",upload.single('myfile'), async (req, res) => {
   const { userId }= req.params;
   const {name , email, password, gender, phone } = req.body;
+  
 
   try {
     const user = await User.findById(userId);
@@ -99,15 +149,19 @@ authRouter.put("/api/update/:userId", async (req, res) => {
       user.password = hashedPassword;
     }
 
+    if (req.file) {
+      const x = await cloudinary.uploader.upload(req.file.path);
+
+      user.profileImage = x.secure_url;
+      fs.unlinkSync(req.file.path); 
+    }
+
     const updatedUser = await user.save();
-    res.json(updatedUser);
-    
-    
-    
-  } catch (e) {
+    res.json(updatedUser);   
+  } catch (error) {
     res.status(500).json({ error: error.message });
   }
-})
+});
 
 
 module.exports = authRouter;
