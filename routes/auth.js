@@ -126,11 +126,12 @@ cloudinary.config({
 //   })
 // })
 
-const extractPublicId = (profileImage) => {
-  const regex = /\/upload\/([^\/.]+)/; // Regular expression to match public ID in Cloudinary URL
-  const match = profileImage.match(regex);
-  return match ? match[1] : null; // Return public ID if match found, otherwise return null
+const extractPublicId = (imageUrl) => {
+  const regex = /\/v\d+\/([^\/.]+)/; // Regular expression to match public ID in Cloudinary URL
+  const match = imageUrl.match(regex);
+  return match ? match[1] : null;        // Return public ID if match found, otherwise return null
 };
+const imageUrl = 'https://res.cloudinary.com/dtgeckjmr/image/upload/v1715151244/fiwnxyg5mpklejzpgwim.png';
 
 authRouter.put("/api/update/:userId",upload.single('myfile'), async (req, res) => {
   const { userId }= req.params;
@@ -160,6 +161,7 @@ authRouter.put("/api/update/:userId",upload.single('myfile'), async (req, res) =
       
 
       const previousPublicId = extractPublicId(user.profileImage);
+      console.log('Previous Public ID:', previousPublicId);
 
 
 
