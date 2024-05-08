@@ -59,25 +59,16 @@ const BookController = {
         }
     },
     searchBooks: async function(req, res){
-        // try {
-        //    const books = await BookModel.find({
-        //     name: { $regex: req.params.name, $options: "i" },
-        //    });
-        //    return res.json({ success: true, data: books });
-           
-        // } catch (ex) {
-        //     return res.json({ success: false, message: ex });
-        // }
         try {
-            const { query } = req.query; // Get search query from request
-    
-            // Perform search query (example with Mongoose)
-            const results = await Book.find({ name: { $regex: query, $options: 'i' } });
-
-    res.json(results); 
-        } catch (error) {
-            res.status(500).json({ error: error.message });
+           const books = await BookModel.find({
+            name: { $regex: req.params.name, $options: "i" },
+           });
+           return res.json({ success: true, data: books });
+           
+        } catch (ex) {
+            return res.json({ success: false, message: ex });
         }
+        
 
     },
 
