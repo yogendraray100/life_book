@@ -103,32 +103,32 @@ cloudinary.config({
   api_secret: 'TOjtPhY-Drb6_AOVKPYfQzkE3Zw' 
 });
 
-authRouter.post("/upload",upload.single('myfile'),async (req,res) => {
+// authRouter.post("/upload",upload.single('myfile'),async (req,res) => {
 
- const x = await cloudinary.uploader.upload(req.file.path);
+//  const x = await cloudinary.uploader.upload(req.file.path);
 
-const newvar = new Image({Image_Url: x.secure_url})
-newvar.save().then(() => console.log("done"));
+// const newvar = new Image({Image_Url: x.secure_url})
+// newvar.save().then(() => console.log("done"));
 
- fs.unlink((req.file.path),
- function(err){
-     if (err) console.log(err);
-     else {
-         console.log("\nDeleted file");
+//  fs.unlink((req.file.path),
+//  function(err){
+//      if (err) console.log(err);
+//      else {
+//          console.log("\nDeleted file");
 
          
-     }
- });
+//      }
+//  });
 
-  res.json({
-  msg:'file uploaded',
-  your_url:{image_url: x.secure_url}
-  })
-})
+//   res.json({
+//   msg:'file uploaded',
+//   your_url:{image_url: x.secure_url}
+//   })
+// })
 
-const extractPublicId = (imageUrl) => {
+const extractPublicId = (profileImage) => {
   const regex = /\/upload\/([^\/.]+)/; // Regular expression to match public ID in Cloudinary URL
-  const match = imageUrl.match(regex);
+  const match = profileImage.match(regex);
   return match ? match[1] : null; // Return public ID if match found, otherwise return null
 };
 
