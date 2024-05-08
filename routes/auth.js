@@ -51,7 +51,7 @@ authRouter.post("/api/signup", async (req, res) => {
 });
 
 // Sign In Route
-// Exercise
+
 authRouter.post("/api/signin", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -103,6 +103,7 @@ cloudinary.config({
   api_secret: 'TOjtPhY-Drb6_AOVKPYfQzkE3Zw' 
 });
 
+//upload image 
 // authRouter.post("/upload",upload.single('myfile'),async (req,res) => {
 
 //  const x = await cloudinary.uploader.upload(req.file.path);
@@ -126,12 +127,13 @@ cloudinary.config({
 //   })
 // })
 
+//update image
 const extractPublicId = (imageUrl) => {
   const regex = /\/v\d+\/([^\/.]+)/; // Regular expression to match public ID in Cloudinary URL
   const match = imageUrl.match(regex);
   return match ? match[1] : null;        // Return public ID if match found, otherwise return null
 };
-const imageUrl = 'https://res.cloudinary.com/dtgeckjmr/image/upload/v1715151244/fiwnxyg5mpklejzpgwim.png';
+
 
 authRouter.put("/api/update/:userId",upload.single('myfile'), async (req, res) => {
   const { userId }= req.params;
@@ -157,14 +159,8 @@ authRouter.put("/api/update/:userId",upload.single('myfile'), async (req, res) =
 
     if (req.file) {
       const x = await cloudinary.uploader.upload(req.file.path);
-
-      
-
       const previousPublicId = extractPublicId(user.profileImage);
-      console.log('Previous Public ID:', previousPublicId);
-
-
-
+      
       if (previousPublicId) {
         await cloudinary.uploader.destroy(previousPublicId);
       }
