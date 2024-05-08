@@ -153,6 +153,13 @@ authRouter.put("/api/update/:userId",upload.single('myfile'), async (req, res) =
       const x = await cloudinary.uploader.upload(req.file.path);
 
       user.profileImage = x.secure_url;
+
+      const previousPublicId = extractPublicId(user.profileImage);
+
+      if (previousPublicId) {
+        await cloudinary.uploader.destroy(previousPublicId);
+      }
+      
       fs.unlinkSync(req.file.path); 
     }
 
