@@ -72,7 +72,7 @@ const BookController = {
             const { query } = req.query; // Get search query from request
     
             // Perform search query (example with Mongoose)
-           const results = await BookModel.find({ $text: { $search: query } });
+            const results = await Book.find({ name: { $regex: query, $options: 'i' } });
 
     res.json(results); 
         } catch (error) {
