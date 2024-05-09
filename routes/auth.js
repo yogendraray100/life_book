@@ -130,9 +130,9 @@ cloudinary.config({
 
 //update image
 const extractPublicId = (imageUrl) => {
-  const regex = /\/v\d+\/([^\/.]+)/; // Regular expression to match public ID in Cloudinary URL
+  const regex = /\/v\d+\/([^\/.]+)/; 
   const match = imageUrl.match(regex);
-  return match ? match[1] : null;        // Return public ID if match found, otherwise return null
+  return match ? match[1] : null;        
 };
 
 
