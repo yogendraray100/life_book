@@ -128,11 +128,11 @@ cloudinary.config({
 // })
 
 //update image
-const extractPublicId = (imageUrl) => {
-  const regex = /\/v\d+\/([^\/.]+)/; // Regular expression to match public ID in Cloudinary URL
-  const match = imageUrl.match(regex);
-  return match ? match[1] : null;        // Return public ID if match found, otherwise return null
-};
+// const extractPublicId = (imageUrl) => {
+//   const regex = /\/v\d+\/([^\/.]+)/; // Regular expression to match public ID in Cloudinary URL
+//   const match = imageUrl.match(regex);
+//   return match ? match[1] : null;        // Return public ID if match found, otherwise return null
+// };
 
 
 authRouter.put("/api/update/:userId",upload.single('myfile'), async (req, res) => {
@@ -152,18 +152,18 @@ authRouter.put("/api/update/:userId",upload.single('myfile'), async (req, res) =
     user.phone = phone;
 
     if (password) {
-      // Hash the new password if provided
+      
       const hashedPassword = await bcryptjs.hash(password, 8);
       user.password = hashedPassword;
     }
 
     if (req.file) {
       const x = await cloudinary.uploader.upload(req.file.path);
-      const previousPublicId = extractPublicId(user.profileImage);
+      // const previousPublicId = extractPublicId(user.profileImage);
       
-      if (previousPublicId) {
-        await cloudinary.uploader.destroy(previousPublicId);
-      }
+      // if (previousPublicId) {
+      //   await cloudinary.uploader.destroy(previousPublicId);
+      // }
 
       user.profileImage = x.secure_url;
       
