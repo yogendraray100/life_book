@@ -111,15 +111,15 @@ authRouter.post("/upload",upload.single('myfile'),async (req,res) => {
 const newvar = new Image({Image_Url: x.secure_url})
 newvar.save().then(() => console.log("done"));
 
-//  fs.unlink((req.file.path),
-//  function(err){
-//      if (err) console.log(err);
-//      else {
-//          console.log("\nDeleted file");
+ fs.unlink((req.file.path),
+ function(err){
+     if (err) console.log(err);
+     else {
+         console.log("\nDeleted file");
 
          
-//      }
-//  });
+     }
+ });
 
   res.json({
   msg:'file uploaded',
