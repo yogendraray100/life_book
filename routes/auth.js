@@ -11,7 +11,7 @@ const multer  = require('multer')
 const { v4:uuidv4 } = require('uuid') ;
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, '/uploads')
+    cb(null, '../uploads')
   },
   filename: function (req, file, cb) {
    const random = uuidv4()
@@ -128,54 +128,54 @@ newvar.save().then(() => console.log("done"));
 })
 
 //update image
-const extractPublicId = (imageUrl) => {
-  const regex = /\/v\d+\/([^\/.]+)/; // Regular expression to match public ID in Cloudinary URL
-  const match = imageUrl.match(regex);
-  return match ? match[1] : null;        // Return public ID if match found, otherwise return null
-};
+// const extractPublicId = (imageUrl) => {
+//   const regex = /\/v\d+\/([^\/.]+)/; // Regular expression to match public ID in Cloudinary URL
+//   const match = imageUrl.match(regex);
+//   return match ? match[1] : null;        // Return public ID if match found, otherwise return null
+// };
 
 
-authRouter.put("/api/update/:userId",upload.single('myfile'), async (req, res) => {
-  const { userId }= req.params;
-  const {name , email, password, gender, phone } = req.body;
+// authRouter.put("/api/update/:userId",upload.single('myfile'), async (req, res) => {
+//   const { userId }= req.params;
+//   const {name , email, password, gender, phone } = req.body;
   
 
-  try {
-    const user = await User.findById(userId);
-    if (!user) {
-      return res.status(404).json({ msg: "User not found" });
-    }
+//   try {
+//     const user = await User.findById(userId);
+//     if (!user) {
+//       return res.status(404).json({ msg: "User not found" });
+//     }
     
-    user.name = name;
-    user.email = email;
-    user.gender = gender;
-    user.phone = phone;
+//     user.name = name;
+//     user.email = email;
+//     user.gender = gender;
+//     user.phone = phone;
 
-    if (password) {
+//     if (password) {
       
-      const hashedPassword = await bcryptjs.hash(password, 8);
-      user.password = hashedPassword;
-    }
+//       const hashedPassword = await bcryptjs.hash(password, 8);
+//       user.password = hashedPassword;
+//     }
 
-    if (req.file) {
-      const x = await cloudinary.uploader.upload(req.file.path);
-      const previousPublicId = extractPublicId(user.profileImage);
+//     if (req.file) {
+//       const x = await cloudinary.uploader.upload(req.file.path);
+//       const previousPublicId = extractPublicId(user.profileImage);
       
-      if (previousPublicId) {
-        await cloudinary.uploader.destroy(previousPublicId);
-      }
+//       if (previousPublicId) {
+//         await cloudinary.uploader.destroy(previousPublicId);
+//       }
 
-      user.profileImage = x.secure_url;
+//       user.profileImage = x.secure_url;
       
-      fs.unlinkSync(req.file.path); 
-    }
+//       fs.unlinkSync(req.file.path); 
+//     }
 
-    const updatedUser = await user.save();
-    res.json(updatedUser);   
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
+//     const updatedUser = await user.save();
+//     res.json(updatedUser);   
+//   } catch (error) {
+//     res.status(500).json({ error: error.message });
+//   }
+// });
 
 
 module.exports = authRouter;
