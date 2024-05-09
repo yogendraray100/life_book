@@ -9,23 +9,23 @@ const cloudinary = require('cloudinary').v2;
 const fs = require("fs");
 const multer  = require('multer')
 const { v4:uuidv4 } = require('uuid') ;
-// const storage = multer.diskStorage({
-//   destination: function (req, file, cb) {
-//     cb(null, '../uploads')
-//   },
-//   filename: function (req, file, cb) {
-//    const random = uuidv4()
-//     cb(null, random+""+file.originalname)
-//   }
-// })
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, '../uploads')
+  },
+  filename: function (req, file, cb) {
+   const random = uuidv4()
+    cb(null, random+""+file.originalname)
+  }
+})
 
 //test
-const upload = multer({ dest: '../uploads' })
+const upload = multer({ storage: storage })
 authRouter.post('/test',upload.single('myfile'),(req,res)=>{
   res.send('hello')
 })
 
-//const upload = multer({ storage: storage })
+
 require('../index')
 //const Image = mongoose.model('Image', {Image_Url: String});
 
