@@ -11,7 +11,7 @@ const multer  = require('multer')
 const { v4:uuidv4 } = require('uuid') ;
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "../uploads")
+    cb(null, '../uploads')
   },
   filename: function (req, file, cb) {
    const random = uuidv4()
@@ -128,11 +128,11 @@ cloudinary.config({
 // })
 
 //update image
-// const extractPublicId = (imageUrl) => {
-//   const regex = /\/v\d+\/([^\/.]+)/; // Regular expression to match public ID in Cloudinary URL
-//   const match = imageUrl.match(regex);
-//   return match ? match[1] : null;        // Return public ID if match found, otherwise return null
-// };
+const extractPublicId = (imageUrl) => {
+  const regex = /\/v\d+\/([^\/.]+)/; // Regular expression to match public ID in Cloudinary URL
+  const match = imageUrl.match(regex);
+  return match ? match[1] : null;        // Return public ID if match found, otherwise return null
+};
 
 
 authRouter.put("/api/update/:userId",upload.single('myfile'), async (req, res) => {
@@ -159,11 +159,11 @@ authRouter.put("/api/update/:userId",upload.single('myfile'), async (req, res) =
 
     if (req.file) {
       const x = await cloudinary.uploader.upload(req.file.path);
-      // const previousPublicId = extractPublicId(user.profileImage);
+      const previousPublicId = extractPublicId(user.profileImage);
       
-      // if (previousPublicId) {
-      //   await cloudinary.uploader.destroy(previousPublicId);
-      // }
+      if (previousPublicId) {
+        await cloudinary.uploader.destroy(previousPublicId);
+      }
 
       user.profileImage = x.secure_url;
       
