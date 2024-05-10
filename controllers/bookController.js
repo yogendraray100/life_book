@@ -18,7 +18,7 @@ const BookController = {
 
     fetchAllBooks: async function(req, res) {
         try {
-            const books = await BookModel.find().populate();
+            const books = await BookModel.find().populate("author");
             return res.json({ success: true, data: books });
         }
 
